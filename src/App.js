@@ -1,52 +1,139 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import Form from "./Form";
 import List from "./List";
+import axios from "axios";
 
 
 function App() {
 
-    const [task, setTasks] = useState([
+    const [task, setTasks] = useState([])
 
-        {id: 1, name: 'Apple', done: false},
-        {id: 2, name: 'Cherry', done: false},
-        {id: 3, name: 'Strawberry', done: false}
+    const deleteTask = async (todoId) => {
+        // const delTask = task.filter(el => el._id !== id)
+        // setTasks(delTask)
+       await axios.delete(`http://localhost:5000/todo/${todoId}`)
+            .then(function (response){
 
-    ])
+            })
 
-    const deleteTask = (id) => {
-        const delTask = task.filter(el => el.id !== id)
-        setTasks(delTask)
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+        await axios.get('http://localhost:5000/todo')
+            .then(function (response){
+                const listFromServer = response.data
+                console.log(listFromServer);
+                setTasks(listFromServer)
+            })
+
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+
     }
 
-    const addTask = (newName) => {
-        const addNewTask = {id: Math.random(), name: newName, done:false}
-        const add = [...task, addNewTask]
-        setTasks(add)
+    const addTask = async (newName) => {
+        // const addNewTask = {id: Math.random(), name: newName, done:false}
+        // const add = [...task, addNewTask]
+        // setTasks(add)
+
+       await axios.post('http://localhost:5000/todo',{name: newName})
+            .then(function (response){
+                // const listFromServer = response.data
+                // console.log(listFromServer);
+                // setTasks(listFromServer)
+            })
+
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+
+
+       await axios.get('http://localhost:5000/todo')
+            .then(function (response){
+                const listFromServer = response.data
+                console.log(listFromServer);
+                setTasks(listFromServer)
+            })
+
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+
     }
 
-    const markDone = ({id, done}) => {
-        const update = task.map(el => {
-            if (el.id === id) return {...el, done};
-            return el
-        })
-        setTasks(update)
+    // const markDone = async (todoId) => {
+    //     const update = task.map(el => {
+    //         if (el._id === id) return {...el, done};
+    //         return el
+    //     })
+    //     setTasks(update)
+    //
+    // }
+
+    const editItem = async (newTitle, todoId) => {
+        // const makeEdit = task.map(el => {
+        //   if (el._id === id) return {...el, name: newName};
+        //   return el
+        // })
+        // setTasks(makeEdit)
+        await axios.patch(`http://localhost:5000/todo/${todoId}`,{name: newTitle})
+            .then(function (response){
+
+            })
+
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+
+
+        await axios.get('http://localhost:5000/todo')
+            .then(function (response){
+                const listFromServer = response.data
+                console.log(listFromServer);
+                setTasks(listFromServer)
+            })
+
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
     }
 
-    const editItem = (newName, id) => {
-        const makeEdit = task.map(el => {
-          if (el.id === id) return {...el, name: newName};
-          return el
-        })
-        setTasks(makeEdit)
-    }
+    const makeLineTrough = async (todo) => {
+        // const line = task.map((el) => {
+        //     if (el._id === id) return {...el, done: !el.done}
+        //     return el
+        // })
+        // setTasks(line)
+        await axios.put(`http://localhost:5000/todo/${todo._id}`,{done: !todo.done})
+            .then(function (response){
 
-    const makeLineTrough = (id) => {
-        const line = task.map((el) => {
-            if (el.id === id) return {...el, done: !el.done}
-            return el
-        })
-        setTasks(line)
+            })
+
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+
+
+        await axios.get('http://localhost:5000/todo')
+            .then(function (response){
+                const listFromServer = response.data
+                console.log(listFromServer);
+                setTasks(listFromServer)
+            })
+
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
     }
 
     const moveUp = (currentElement, previousElement) => {
@@ -59,6 +146,20 @@ function App() {
         setTasks(up)
     }
 
+    useEffect(() => {
+        axios.get('http://localhost:5000/todo')
+            .then(function (response){
+                const listFromServer = response.data
+                console.log(listFromServer);
+                setTasks(listFromServer)
+            })
+
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            });
+    }, [])
+
 
     return (
 
@@ -68,7 +169,7 @@ function App() {
             <Form addTask={addTask}/>
             <List task={task}
                   deleteTask={deleteTask}
-                  markDone={markDone}
+                  // markDone={markDone}
                   editItem={editItem}
                   makeLineTrough={makeLineTrough}
                   moveUp={moveUp}

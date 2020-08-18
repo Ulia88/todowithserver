@@ -12,14 +12,15 @@ function List(props) {
             {task.map((el, index) => {
                 const isElementLast = index === task.length - 1
                 return < Edit
-                el = {el}
-                markDone = {markDone}
-                deleteTask = {deleteTask}
-                editItem = {editItem}
-                makeLineTrough = {makeLineTrough}
-                index = {index}
-                moveUp = {moveUp}
-                isElementLast={isElementLast}
+                    key={index}
+                    el={el}
+                    markDone={markDone}
+                    deleteTask={deleteTask}
+                    editItem={editItem}
+                    makeLineTrough={makeLineTrough}
+                    index={index}
+                    moveUp={moveUp}
+                    isElementLast={isElementLast}
                 />
 
             })}

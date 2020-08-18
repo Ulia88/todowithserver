@@ -1,10 +1,13 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import Form from "./Form";
 import List from "./List";
+import axios from 'axios';
 
 
 function App() {
+
+
 
     const [task, setTasks] = useState([
 
@@ -20,7 +23,7 @@ function App() {
     }
 
     const addTask = (newName) => {
-        const addNewTask = {id: Math.random(), name: newName, done:false}
+        const addNewTask = {id: Math.random(), name: newName, done: false}
         const add = [...task, addNewTask]
         setTasks(add)
     }
@@ -35,8 +38,8 @@ function App() {
 
     const editItem = (newName, id) => {
         const makeEdit = task.map(el => {
-          if (el.id === id) return {...el, name: newName};
-          return el
+            if (el.id === id) return {...el, name: newName};
+            return el
         })
         setTasks(makeEdit)
     }
@@ -52,12 +55,13 @@ function App() {
     const moveUp = (currentElement, previousElement) => {
         if (previousElement < 0 || previousElement >= task.length) return                           //in case nothing is broken
         const up = task.map((el, i) => {
-        if (currentElement === i) return task[previousElement];
-        if (previousElement === i) return task[currentElement];
-        return el
+            if (currentElement === i) return task[previousElement];
+            if (previousElement === i) return task[currentElement];
+            return el
         })
         setTasks(up)
     }
+
 
 
     return (
@@ -73,7 +77,6 @@ function App() {
                   makeLineTrough={makeLineTrough}
                   moveUp={moveUp}
             />
-
 
 
         </div>
